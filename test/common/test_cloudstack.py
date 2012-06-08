@@ -64,7 +64,8 @@ class CloudStackCommonTest(unittest.TestCase):
         self.driver.path = '/async/fail'
         try:
             self.connection._async_request('fake')
-        except Exception, e:
+        except Exception:
+            e = sys.exc_info()[1]
             self.assertEquals(CloudStackMockHttp.ERROR_TEXT, str(e))
             return
         self.assertFalse(True)
