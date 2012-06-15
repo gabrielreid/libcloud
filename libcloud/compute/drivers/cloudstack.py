@@ -16,7 +16,7 @@
 from libcloud.compute.providers import Provider
 from libcloud.common.cloudstack import CloudStackDriverMixIn
 from libcloud.compute.base import Node, NodeDriver, NodeImage, NodeLocation, \
-                                  NodeSize
+                                  NodeSize, StorageVolume
 from libcloud.compute.types import NodeState, LibcloudError
 
 
@@ -86,18 +86,6 @@ class CloudStackDiskOffering(object):
         self.name = name
         self.size = size
         self.customizable = customizable
-
-    def __eq__(self, other):
-        return self.__class__ is other.__class__ and self.id == other.id
-
-
-
-class CloudStackVolume(object):
-    """A storage volume within CloudStack."""
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
 
     def __eq__(self, other):
         return self.__class__ is other.__class__ and self.id == other.id
@@ -324,9 +312,11 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
 
         volumeResponse = requestResult['volume']
 
-        return CloudStackVolume(
+        return StorageVolume(
                             id = volumeResponse['id'],
-                            name = volumeResponse['name'])
+                            size = size, 
+                            driver = self,
+                            extra = dict(name = volumeResponse['name']))
 
 
     def ex_attach_volume(self, node, volume):
@@ -336,7 +326,7 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
         @type node: L{CloudStackNode}
         @param node: The node to which the volume is to be attached
 
-        @type volume: L{CloudStackVolume}
+        @type volume: L{StorageVolume}
         @param volume: The volume to be attached
         """
 

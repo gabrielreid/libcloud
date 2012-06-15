@@ -362,6 +362,22 @@ class NodeAuthPassword(object):
     def __repr__(self):
         return '<NodeAuthPassword>'
 
+class StorageVolume(UuidMixin):
+    """
+    A base StorageVolume class to derive from.
+    """
+
+    def __init__(self, id, size, driver, extra=None):
+        self.id = id
+        self.size = size
+        self.driver = driver
+        self.extra = extra
+        UuidMixin.__init__(self)
+
+    def __repr__(self):
+        return "<StorageVolume id=%s size=%s driver=>" % (
+                        self.id, self.size, self.driver.name)
+
 
 class NodeDriver(BaseDriver):
     """
