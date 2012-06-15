@@ -308,13 +308,26 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
                             extra = dict(name = volumeResponse['name']))
 
 
-    def attach_volume(self, node, volume, device=None):
+    def attach(self, node, volume, device=None):
 
         # TODO Add handling for device name
 
         self._async_request('attachVolume', 
                                 id=volume.id, 
                                 virtualMachineId=node.id)
+        return True
+
+
+    def detach(self, node, volume):
+        self._async_request('detachVolume',
+                                id=volume.id,
+                                virtualMachineId=node.id)
+
+        return True
+
+
+    def destroy_volume(self, volume):
+        self._sync_request('deleteVolume', id=volume.id)
         return True
 
 
