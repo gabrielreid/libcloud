@@ -22,6 +22,7 @@ from libcloud.compute.drivers.ec2 import NimbusNodeDriver, EucNodeDriver
 from libcloud.compute.drivers.ec2 import EC2APNENodeDriver
 from libcloud.compute.drivers.ec2 import IdempotentParamError
 from libcloud.compute.base import Node, NodeImage, NodeSize, NodeLocation
+from libcloud.compute.base import StorageVolume
 
 from test import MockHttp, LibcloudTestCase
 from test.compute import TestCaseMixin
@@ -294,6 +295,26 @@ class EC2Tests(LibcloudTestCase, TestCaseMixin):
         self.assertTrue(result)
 
 
+    def test_create_volume(self):
+
+        location = self.driver.list_locations()[0]
+        vol = self.driver.create_volume(10, 'vol', location)
+
+        self.assertEquals(10, vol.size)
+        self.assertEquals('vol', vol.name)
+
+
+    def test_destroy_volume(self):
+        vol = StorageVolume(
+                    id='vol-4282672b', name='test',
+                    size=10, driver=self.driver)
+
+        retValue = self.driver.destroy_volume(vol)
+
+        self.assertTrue(retValue)
+        
+
+
 class EC2MockHttp(MockHttp):
 
     fixtures = ComputeFileFixtures('ec2')
@@ -376,6 +397,14 @@ class EC2MockHttp(MockHttp):
 
     def _idempotent_CreateTags(self, method, url, body, headers):
         body = self.fixtures.load('create_tags.xml')
+        return (httplib.OK, body, {}, httplib.responses[httplib.OK])
+
+    def _CreateVolume(self, method, url, body, headers):
+        body = self.fixtures.load('create_volume.xml')
+        return (httplib.OK, body, {}, httplib.responses[httplib.OK])
+
+    def _DeleteVolume(self, method, url, body, headers):
+        body = self.fixtures.load('delete_volume.xml')
         return (httplib.OK, body, {}, httplib.responses[httplib.OK])
 
 
@@ -479,7 +508,7 @@ class NimbusTests(EC2Tests):
         # Nimbus doesn't support creating tags so this one should be a
         # passthrough
         node = self.driver.list_nodes()[0]
-        self.driver.ex_create_tags(node=node, tags={'foo': 'bar'})
+        self.driver.ex_create_tags(resource=node, tags={'foo': 'bar'})
         self.assertExecutedMethodCount(0)
 
 

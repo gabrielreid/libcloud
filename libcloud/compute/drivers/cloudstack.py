@@ -303,6 +303,7 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
 
         return StorageVolume(
                             id = volumeResponse['id'],
+                            name = name,
                             size = size, 
                             driver = self,
                             extra = dict(name = volumeResponse['name']))

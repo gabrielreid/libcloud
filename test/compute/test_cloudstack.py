@@ -81,7 +81,8 @@ class CloudStackNodeDriverTest(unittest.TestCase, TestCaseMixin):
 
         volume = self.driver.create_volume(10, volumeName, location)
 
-        self.assertEquals(volumeName, volume.extra['name'])
+        self.assertEquals(volumeName, volume.name)
+        self.assertEquals(10, volume.size)
 
     def test_create_volume_no_noncustomized_offering_with_size(self):
         """If the sizes of disk offerings are not configurable and there

@@ -367,8 +367,9 @@ class StorageVolume(UuidMixin):
     A base StorageVolume class to derive from.
     """
 
-    def __init__(self, id, size, driver, extra=None):
+    def __init__(self, id, name, size, driver, extra=None):
         self.id = id
+        self.name = name
         self.size = size
         self.driver = driver
         self.extra = extra
