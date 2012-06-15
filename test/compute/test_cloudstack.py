@@ -124,16 +124,13 @@ class CloudStackNodeDriverTest(unittest.TestCase, TestCaseMixin):
 
 
     def test_detach(self):
-        node = self.driver.list_nodes()[0]
         volumeName = 'vol-0'
         location = self.driver.list_locations()[0]
 
         volume = self.driver.create_volume(
                                 10, volumeName, location)
 
-        self.driver.attach(volume, node)
-
-        detachReturnVal = self.driver.detach(volume, node)
+        detachReturnVal = self.driver.detach(volume)
 
         self.assertTrue(detachReturnVal)
 

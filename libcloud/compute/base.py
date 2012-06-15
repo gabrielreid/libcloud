@@ -392,17 +392,13 @@ class StorageVolume(UuidMixin):
         return self.driver.attach(node, self, device)
 
 
-    def detach(self, node):
-        """Detach this volume from a node
+    def detach(self):
+        """Detach this volume from its node
 
-        @param      node: Node from which the volume is to be detached
-        @type       node: L{Node}
-
-            
         @returns C{bool}
         """
         
-        return self.driver.detach(node, self)
+        return self.driver.detach(self)
 
 
     def destroy(self):
@@ -728,11 +724,8 @@ class NodeDriver(BaseDriver):
         raise NotImplementedError('attach not implemented for this driver')
 
 
-    def detach(self, node, volume):
+    def detach(self, volume):
         """Detaches a volume from a node
-
-        @param      node: Node from which the volume is to be detached
-        @type       node: L{Node}
 
         @param      volume: Volume to be detached
         @type       volume: L{StorageVolume}

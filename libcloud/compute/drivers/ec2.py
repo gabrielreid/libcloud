@@ -557,6 +557,26 @@ class EC2NodeDriver(NodeDriver):
         response = self.connection.request(self.path, params=params).object
         return self._get_boolean(response)
 
+    
+    def attach(self, node, volume, device):
+        params = {
+                'Action': 'AttachVolume',
+                'VolumeId': volume.id,
+                'InstanceId': node.id,
+                'Device': device }
+
+        self.connection.request(self.path, params=params)
+        return True
+
+
+    def detach(self, volume):
+        params = {
+                'Action': 'DetachVolume',
+                'VolumeId': volume.id }
+
+        self.connection.request(self.path, params=params)
+        return True
+
 
     def ex_create_keypair(self, name):
         """Creates a new keypair

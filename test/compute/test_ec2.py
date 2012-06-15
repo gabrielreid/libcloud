@@ -312,6 +312,30 @@ class EC2Tests(LibcloudTestCase, TestCaseMixin):
         retValue = self.driver.destroy_volume(vol)
 
         self.assertTrue(retValue)
+
+
+    def test_attach(self):
+        vol = StorageVolume(
+                    id='vol-4282672b', name='test',
+                    size=10, driver=self.driver)
+
+        node = Node('i-4382922a', None, None, None, None, self.driver)
+
+        retValue = self.driver.attach(node, vol, '/dev/sdh')
+
+        self.assertTrue(retValue)
+
+
+    def test_detach(self):
+        vol = StorageVolume(
+                    id='vol-4282672b', name='test',
+                    size=10, driver=self.driver)
+
+        retValue = self.driver.detach(vol)
+
+        self.assertTrue(retValue)
+        
+
         
 
 
@@ -405,6 +429,14 @@ class EC2MockHttp(MockHttp):
 
     def _DeleteVolume(self, method, url, body, headers):
         body = self.fixtures.load('delete_volume.xml')
+        return (httplib.OK, body, {}, httplib.responses[httplib.OK])
+
+    def _AttachVolume(self, method, url, body, headers):
+        body = self.fixtures.load('attach_volume.xml')
+        return (httplib.OK, body, {}, httplib.responses[httplib.OK])
+
+    def _DetachVolume(self, method, url, body, headers):
+        body = self.fixtures.load('detach_volume.xml')
         return (httplib.OK, body, {}, httplib.responses[httplib.OK])
 
 
