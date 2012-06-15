@@ -320,8 +320,7 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
 
     def detach(self, node, volume):
         self._async_request('detachVolume',
-                                id=volume.id,
-                                virtualMachineId=node.id)
+                                id=volume.id)
 
         return True
 

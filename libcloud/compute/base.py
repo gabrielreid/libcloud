@@ -414,7 +414,7 @@ class StorageVolume(UuidMixin):
 
 
     def __repr__(self):
-        return "<StorageVolume id=%s size=%s driver=>" % (
+        return "<StorageVolume id=%s size=%s driver=%s>" % (
                         self.id, self.size, self.driver.name)
 
 
