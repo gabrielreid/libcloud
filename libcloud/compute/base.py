@@ -633,6 +633,76 @@ class NodeDriver(BaseDriver):
 
         return node
 
+
+    def create_volume(self, size, name, location=None, snapshot=None):
+        """Create a new volume.
+
+        @param      size: Size of volume in gigabytes (required)
+        @type       size: C{int}
+
+        @keyword    name: Name of the volume to be created
+        @type       name: C{str}
+
+        @keyword    location: Which data center to create a volume in. If empty,
+                              undefined behavoir will be selected. (optional)
+        @type       location: L{NodeLocation}
+
+        @keyword    snapshot:  Name of snapshot from which to create the new
+                               volume.  (optional)
+        @type       snapshot:  C{str}
+
+        @return: The newly created L{StorageVolume}.
+        """
+        raise NotImplementedError(
+           'create_volume not implemented for this driver')
+
+
+    def destroy_volume(self, volume):
+        """Destroys a storage volume
+
+        @param      volume: Volume to be destroyed
+        @type       volume: L{StorageVolume}
+
+        @return: C{bool}
+        """
+
+        raise NotImplementedError(
+               'destroy_volume not implemented for this driver')
+
+
+    def attach(self, node, volume, device=None):
+        """Attaches volume to node
+
+        @param      node: Node to attach volume to
+        @type       node: L{Node}
+
+        @param      volume: Volume to attach
+        @type       volume: L{StorageVolume}
+
+        @param      device: Where the device is exposed, 
+                            e.g. '/dev/sdb (optional)
+        @type       device: C{str}
+
+        @return: C{bool}
+        """
+        raise NotImplementedError('attach not implemented for this driver')
+
+
+    def detach(self, node, volume):
+        """Detaches a volume from a node
+
+        @param      node: Node from which the volume is to be detached
+        @type       node: L{Node}
+
+        @param      volume: Volume to be detached
+        @type       volume: L{StorageVolume}
+
+        @returns C{bool}
+        """
+
+        raise NotImplementedError('detach not implemented for this driver')
+
+
     def _wait_until_running(self, node, wait_period=3, timeout=600,
                             ssh_interface='public_ips', force_ipv4=True):
         """

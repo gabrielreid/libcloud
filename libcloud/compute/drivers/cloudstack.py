@@ -277,21 +277,10 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
 
         return diskOfferings
 
-    def ex_create_volume(self, name, location, size):
-        """
-        Create a new detached storage volume.
+    def create_volume(self, size, name, location, snapshot=None):
 
-        @type name: C{str}
-        @param name: Name to be given to the created volume
 
-        @type location: L{NodeLocation}
-        @param location: The location where the volume is to be created
-
-        @type size: C{int}
-        @param location: The size of the volume to be created, in GB
-
-        @returns: The newly-created detached volume
-        """
+        # TODO Add snapshot handling
 
         for diskOffering in self.ex_list_disk_offerings():
             if diskOffering.size == size or diskOffering.customizable:
@@ -319,16 +308,9 @@ class CloudStackNodeDriver(CloudStackDriverMixIn, NodeDriver):
                             extra = dict(name = volumeResponse['name']))
 
 
-    def ex_attach_volume(self, node, volume):
-        """
-        Attach a storage volume to a node.
+    def attach_volume(self, node, volume, device=None):
 
-        @type node: L{CloudStackNode}
-        @param node: The node to which the volume is to be attached
-
-        @type volume: L{StorageVolume}
-        @param volume: The volume to be attached
-        """
+        # TODO Add handling for device name
 
         self._async_request('attachVolume', 
                                 id=volume.id, 
