@@ -374,6 +374,45 @@ class StorageVolume(UuidMixin):
         self.extra = extra
         UuidMixin.__init__(self)
 
+
+    def attach(self, node, device=None):
+        """Attach this volume to a node.
+
+        @param      node: Node to attach volume to
+        @type       node: L{Node}
+
+        @param      device: Where the device is exposed, 
+                            e.g. '/dev/sdb (optional)
+        @type       device: C{str}
+       
+        @returns C{bool} 
+        """
+
+        return self.driver.attach(node, self, device)
+
+
+    def detach(self, node):
+        """Detach this volume from a node
+
+        @param      node: Node from which the volume is to be detached
+        @type       node: L{Node}
+
+            
+        @returns C{bool}
+        """
+        
+        return self.driver.detach(node, self)
+
+
+    def destroy(self):
+        """Destroy this storage volume.
+
+        @returns C{bool}
+        """
+
+        return self.driver.destroy_volume(self)
+
+
     def __repr__(self):
         return "<StorageVolume id=%s size=%s driver=>" % (
                         self.id, self.size, self.driver.name)
